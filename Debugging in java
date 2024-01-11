@@ -1,0 +1,131 @@
+package com.cozybites;
+
+import java.io.IOException;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
+
+public class MenuController {
+
+    // these are in cents!!!
+
+    final int appetizerPrice = 1500;
+    final int entreePrice = 3750;
+    final int dessertPrice = 1375;
+
+    final double taxRate = 10;
+    double tax; 
+    double subtotal;
+    double total;
+
+    int totalItems;
+
+    @FXML public CheckBox appetizerCheckBox;
+    @FXML public CheckBox entreeCheckBox;
+    @FXML public CheckBox dessertCheckBox;
+
+    @FXML public Label appetizerLabel;
+    @FXML public Label entreeLabel;
+    @FXML public Label dessertLabel;
+
+    @FXML public Label subtotalLabel;
+    @FXML public Label taxLabel;
+    @FXML public Label totalLabel;
+
+    @FXML public Button averageButton;
+    @FXML public Label averagePromptLabel;
+    @FXML public Label averageLabel;
+
+    @FXML
+    private void appetizerActionHandler() throws IOException {
+        recalculate();
+    }
+
+    @FXML
+    private void entreeActionHandler() throws IOException {
+        recalculate();
+    }
+
+    @FXML
+    private void dessertActionHandler() throws IOException {
+        recalculate();
+    }
+
+    @FXML
+    private void averageActionHandler() throws IOException {
+        calculateAverage();
+    }
+
+    @FXML
+    private void goBack() throws IOException {
+        App.setRoot("home");
+    }
+
+    private void calculateAverage() {
+
+            averagePromptLabel.setVisible(true);
+            averageLabel.setText("$" + String.format("%.2f", total / totalItems));
+            averageLabel.setVisible(true);
+
+    }
+
+    private void recalculate() {
+        subtotal = 0;
+
+
+        if (appetizerCheckBox.isSelected()) {
+            double priceInDouble = Double.valueOf(appetizerPrice) / 100;
+            subtotal += priceInDouble;
+            appetizerLabel.setText("$" + String.format("%.2f", priceInDouble));
+            totalItems++;
+        }
+        else {
+            appetizerLabel.setText("$0.00");
+        }
+
+        if (entreeCheckBox.isSelected()) {
+            double priceInDouble = Double.valueOf(entreePrice) / 100;
+            subtotal += priceInDouble;
+            entreeLabel.setText("$" + String.format("%.2f", priceInDouble));
+            totalItems++;
+        }
+        else {
+            entreeLabel.setText("$0.00");
+            subtotal = 0;
+        }
+
+        if (dessertCheckBox.isSelected()) {
+            double priceInDouble = Double.valueOf(dessertPrice) / 100;
+            subtotal += priceInDouble;
+            dessertLabel.setText("$" + String.format("%.2f", priceInDouble));
+            totalItems++;
+        }
+        else {
+            dessertLabel.setText("$0.00");
+        }
+
+        subtotalLabel.setText("$" + String.format("%.2f", subtotal));
+
+        recalculateTax();
+        recalculateTotal();
+        resetAverage();
+    }
+
+    private void recalculateTax() {
+        tax = subtotal * taxRate;
+        taxLabel.setText("$" + String.format("%.2f", tax));
+    }
+
+    private void recalculateTotal() {
+        total = tax + subtotal;
+        totalLabel.setText("$" + String.format("%.2f", total));
+    }
+
+    private void resetAverage() {
+
+        averagePromptLabel.setVisible(false);
+        averageLabel.setVisible(false);
+    }
+}
